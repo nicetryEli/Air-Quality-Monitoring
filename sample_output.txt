@@ -1,0 +1,16 @@
+              precision    recall  f1-score   support
+
+Good              0.60      0.55      0.58     12355
+Moderate          0.44      0.28      0.34     16138
+Unhealthy         0.58      0.72      0.64     26130
+Hazardous         0.61      0.64      0.63     12700
+
+accuracy                              0.57     67323
+macro avg         0.56      0.55      0.55     67323
+weighted avg      0.56      0.57      0.55     67323
+
+Dangerous-class recall:
+Unhealthy: 0.717
+Hazardous: 0.640
+
+//The script also displays a feature-importance chart after evaluation.

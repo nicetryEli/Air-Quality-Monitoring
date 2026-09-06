@@ -1,0 +1,118 @@
+{
+  "rows_used": 412028,
+  "training_rows": 329622,
+  "testing_rows": 82406,
+  "test_fraction": 0.2,
+  "training_end": "2016-05-12T21:00:00",
+  "testing_start": "2016-05-12T21:00:00",
+  "accuracy": 0.7670072567531491,
+  "classification_report": {
+    "Good": {
+      "precision": 0.8349264400299227,
+      "recall": 0.7677315805564048,
+      "f1-score": 0.7999203663149512,
+      "support": 13084.0
+    },
+    "Moderate": {
+      "precision": 0.7012176863958479,
+      "recall": 0.7512296834901625,
+      "f1-score": 0.7253626555159775,
+      "support": 18704.0
+    },
+    "Unhealthy for Sensitive Groups": {
+      "precision": 0.6275341819896275,
+      "recall": 0.48572210564729495,
+      "f1-score": 0.5475957829776292,
+      "support": 10961.0
+    },
+    "Unhealthy": {
+      "precision": 0.8220832072108432,
+      "recall": 0.8741818962125818,
+      "f1-score": 0.8473324782473047,
+      "support": 27961.0
+    },
+    "Very Unhealthy": {
+      "precision": 0.788826663024177,
+      "recall": 0.7223264540337712,
+      "f1-score": 0.7541133455210237,
+      "support": 7995.0
+    },
+    "Hazardous": {
+      "precision": 0.7434882267138987,
+      "recall": 0.9640637665495811,
+      "f1-score": 0.8395294117647059,
+      "support": 3701.0
+    },
+    "accuracy": 0.7670072567531491,
+    "macro avg": {
+      "precision": 0.7530127342273861,
+      "recall": 0.760875914414966,
+      "f1-score": 0.7523090067235986,
+      "support": 82406.0
+    },
+    "weighted avg": {
+      "precision": 0.7640553232926798,
+      "recall": 0.7670072567531491,
+      "f1-score": 0.7628575168495997,
+      "support": 82406.0
+    }
+  },
+  "confusion_matrix_labels": [
+    "Good",
+    "Moderate",
+    "Unhealthy for Sensitive Groups",
+    "Unhealthy",
+    "Very Unhealthy",
+    "Hazardous"
+  ],
+  "confusion_matrix": [
+    [
+      10045,
+      2952,
+      37,
+      39,
+      8,
+      3
+    ],
+    [
+      1932,
+      14051,
+      1933,
+      785,
+      0,
+      3
+    ],
+    [
+      22,
+      2180,
+      5324,
+      3429,
+      3,
+      3
+    ],
+    [
+      32,
+      802,
+      1170,
+      24443,
+      1429,
+      85
+    ],
+    [
+      0,
+      53,
+      20,
+      1010,
+      5775,
+      1137
+    ],
+    [
+      0,
+      0,
+      0,
+      27,
+      106,
+      3568
+    ]
+  ]
+}

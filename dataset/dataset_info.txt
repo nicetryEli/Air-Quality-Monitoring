@@ -1,0 +1,9 @@
+PURE TEMPORAL SPLIT COMPLETED
+-------------------------------------------------------
+Original total rows: 420768
+Train dataset rows:  336614
+Test dataset rows:   84154 (Target ratio: 20.0%)
+-------------------------------------------------------
+Temporal cut-off:    2016-05-12 19:00:00
+Train date range:    2013-03-01 00:00:00 to 2016-05-12 19:00:00
+Test date range:     2016-05-12 19:00:00 to 2017-02-28 23:00:00

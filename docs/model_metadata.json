@@ -1,0 +1,54 @@
+{
+  "version": "v3.2.1",
+  "trained_at": "2026-09-15T13:22:30.969650+00:00",
+  "model_type": "GradientBoostingRegressor (Multi-Horizon 48h AQI)",
+  "model_metrics": {
+    "rows_used": 419616,
+    "training_rows": 335692,
+    "testing_rows": 83924,
+    "test_fraction": 0.2,
+    "training_end": "2016-05-11 14:00:00",
+    "testing_start": "2016-05-11 14:00:00",
+    "accuracy": 0.22664553643772936,
+    "mae": 68.25,
+    "rmse": 92.87
+  },
+  "classification_report": {
+    "Good": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 11982.0
+    },
+    "Moderate": {
+      "precision": 0.29206906643254316,
+      "recall": 0.054124410217473835,
+      "f1-score": 0.09132503660322108,
+      "support": 18439.0
+    },
+    "Unhealthy for Sensitive Groups": {
+      "precision": 0.14488059667449765,
+      "recall": 0.5972169988717563,
+      "f1-score": 0.23319077075570405,
+      "support": 10636.0
+    },
+    "Unhealthy": {
+      "precision": 0.334469124690604,
+      "recall": 0.38336833572823403,
+      "f1-score": 0.35725321888412015,
+      "support": 27141.0
+    },
+    "Very Unhealthy": {
+      "precision": 0.22324446113405932,
+      "recall": 0.11199020438918715,
+      "f1-score": 0.14915636956658093,
+      "support": 10617.0
+    },
+    "Hazardous": {
+      "precision": 0.3407079646017699,
+      "recall": 0.015071442552358583,
+      "f1-score": 0.0288659793814433,
+      "support": 5109.0
+    }
+  }
+}

@@ -1,0 +1,7 @@
+﻿AQI_Class,AQI_Min,AQI_Max,Color_Hex,Khuyen_nghi
+Tốt,0,50,#00E400,"Chất lượng không khí tốt, không ảnh hưởng đến sức khỏe. Có thể hoạt động ngoài trời bình thường."
+Trung bình,51,100,#FFFF00,"Chất lượng ở mức chấp nhận được. Nhóm nhạy cảm (trẻ em, người già, người có bệnh hô hấp) nên hạn chế hoạt động ngoài trời kéo dài."
+Kém,101,150,#FF7E00,Nhóm nhạy cảm có thể bắt đầu gặp ảnh hưởng sức khỏe. Nên hạn chế hoạt động gắng sức ngoài trời.
+Xấu,151,200,#FF0000,"Mọi người có thể bắt đầu ảnh hưởng sức khỏe; nhóm nhạy cảm chịu ảnh hưởng nghiêm trọng hơn. Nên hạn chế ra ngoài, đeo khẩu trang đạt chuẩn."
+Rất xấu,201,300,#8F3F97,Cảnh báo sức khỏe: mọi người có nguy cơ bị ảnh hưởng nghiêm trọng hơn. Hạn chế tối đa hoạt động ngoài trời.
+Nguy hại,301,500,#7E0023,"Cảnh báo khẩn cấp về sức khỏe - toàn bộ dân số có nguy cơ bị ảnh hưởng nghiêm trọng. Nên ở trong nhà, đóng cửa sổ, dùng máy lọc không khí."

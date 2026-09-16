@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quan Trắc & Cảnh Báo Chất Lượng Không Khí (AQI)</title>
+
+    <!-- Google Fonts: Be Vietnam Pro (Hiện đại, tròn trịa, tương thích tiếng Việt 100%) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/gauge.css">
+    <link rel="stylesheet" href="css/cards.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <canvas id="ocean"></canvas>
+
+    <!-- Lớp mây động Ambient -->
+    <div class="cloud-container">
+        <img src="./images/cloud1.png" alt="" style="--i:1; top: 8%; max-width: 450px;">
+        <img src="./images/cloud2.png" alt="" style="--i:1.5; top: 25%; max-width: 300px;">
+        <img src="./images/cloud3.png" alt="" style="--i:2; top: 15%; max-width: 500px;">
+    </div>
+
+    <!-- UI Clock Pill cố định góc trên: Hiển thị thời gian hiện tại của khu vực -->
+    <div class="ui">
+        <div class="ui-top">
+            <div class="mood" title="Thời gian hiện tại của khu vực">
+                <div class="mood-dot"></div>
+                <span class="mood-time" id="mood-time">--:--</span>
+                <span class="mood-tz"
+                    style="font-size: 11px; font-weight: 600; color: var(--color-text-muted); padding-left: 2px;"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="dashboard-scroll-container">
+        <div class="dashboard-content">
+
+            <!-- HEADER TOP BAR: THÔNG TIN HỆ THỐNG + NÚT CHUYỂN SÁNG/TỐI + BỘ CHỌN TRẠM & 3 NGÀY DỰ BÁO -->
+            <header class="dashboard-top-bar">
+                <div class="top-bar-left">
+                    <div class="top-bar-badge">
+                        <span class="top-bar-badge-dot"></span>
+                        <span>Quan trắc thời gian thực &amp; Dự báo chuyên sâu 48h</span>
+                    </div>
+                    <h1 class="top-bar-title">Hệ Thống Cảnh Báo AQI &amp; Kế Hoạch Di Chuyển</h1>
+                </div>
+
+                <div class="top-bar-right">
+                    <!-- Nút chuyển đổi Giao diện Sáng / Tối -->
+                    <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()"
+                        aria-label="Chuyển đổi giao diện Sáng / Tối">
+                        <span id="theme-icon">🌙</span>
+                        <span id="theme-text">Giao diện Tối</span>
+                    </button>
+
+                    <!-- Chọn trạm quan trắc -->
+                    <div class="station-select-wrapper">
+                        <select id="station-select" class="glass-select" aria-label="Chọn trạm quan trắc">
+                            <option value="">Đang nạp dữ liệu trạm...</option>
+                        </select>
+                    </div>
+
+                    <!-- BỘ CHỌN 3 NGÀY: HÔM NAY - NGÀY MAI - NGÀY MỐT (Theo yêu cầu) -->
+                    <div class="day-switcher-pills" id="day-switcher-pills" role="tablist"
+                        aria-label="Bộ chọn ngày quan sát và dự báo">
+                        <button class="day-pill active" data-offset="0" role="tab" aria-selected="true" id="pill-day-0">
+                            <span>Hôm nay</span>
+                            <span class="day-pill-date" id="date-pill-0">--/--/----</span>
+                        </button>
+                        <button class="day-pill" data-offset="1" role="tab" aria-selected="false" id="pill-day-1">
+                            <span>Ngày mai</span>
+                            <span class="day-pill-date" id="date-pill-1">--/--/----</span>
+                        </button>
+                        <button class="day-pill" data-offset="2" role="tab" aria-selected="false" id="pill-day-2">
+                            <span>Ngày mốt</span>
+                            <span class="day-pill-date" id="date-pill-2">--/--/----</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ==============================================================
+                 HERO TOP SECTION: ĐỒNG HỒ AQI & BỘ CHỌN ĐỐI TƯỢNG SỨC KHỎE
+                 (Đặt nổi bật ngay đầu trang để người dân tra cứu tức thì)
+                 ============================================================== -->
+            <section class="liquid-glass-card hero-overview-card"
+                aria-label="Tổng quan chất lượng không khí và khuyến cáo nhóm đối tượng">
+                <canvas class="glass-canvas"></canvas>
+                <div class="card-content hero-content-grid">
+                    <!-- Khối Trái: Đồng hồ tròn AQI -->
+                    <div class="hero-gauge-col">
+                        <div class="dark-gauge-wrapper">
+                            <div class="dark-gauge" id="aqi-click-area">
+                                <svg viewBox="0 0 240 240" class="gauge-svg">
+                                    <defs>
+                                        <mask id="arcMask">
+                                            <path d="M 33.4 170 A 100 100 0 1 1 206.6 170" fill="none" stroke="#ffffff"
+                                                stroke-width="14" stroke-linecap="round" />
+                                        </mask>
+                                    </defs>
+
+                                    <!-- Vòng nền xám mờ -->
+                                    <path class="gauge-track-path" d="M 33.4 170 A 100 100 0 1 1 206.6 170" fill="none"
+                                        stroke="#f1f5f9" stroke-width="14" stroke-linecap="round" />
+
+                                    <!-- Vòng chuyển màu 6 mức độ EPA -->
+                                    <foreignObject x="0" y="0" width="240" height="240" mask="url(#arcMask)">
+                                        <div style="width: 100%; height: 100%; background: conic-gradient(
+                                            from 240deg, 
+                                            #10b981 0deg 25deg, 
+                                            #facc15 55deg 65deg, 
+                                            #fb923c 95deg 105deg, 
+                                            #f87171 135deg 145deg, 
+                                            #a855f7 175deg 185deg, 
+                                            #e11d48 215deg 240deg, 
+                                            transparent 240deg
+                                        );"></div>
+                                    </foreignObject>
+                                </svg>
+
+                                <div class="thumb-container" id="thumb-container">
+                                    <div class="thumb" id="thumb"></div>
+                                </div>
+
+                                <div class="gauge-data">
+                                    <span class="aqi-caption">Chỉ số AQI</span>
+                                    <div class="aqi-num" id="aqi-val">--</div>
+                                    <div class="aqi-label-badge" id="aqi-badge">
+                                        <span class="aqi-label" id="aqi-status">Đang nạp</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-station-meta">
+                            <span class="hero-station-name" id="hero-station-name">Trạm đang quan sát</span>
+                            <span class="hero-obs-note">Số liệu cố định theo kết quả quan trắc &amp; dự báo</span>
+                        </div>
+
+                        <!-- THÔNG TIN CHỈ SỐ AQI THEO QUY CHUẨN QUỐC TẾ (HIỂN THỊ NGAY DƯỚI ĐỒNG HỒ AQI TRÊN GIAO DIỆN ĐIỆN THOẠI) -->
+                        <div class="hero-epa-mobile-scale" onclick="openChart('epa-box')"
+                            aria-label="Thang đo AQI chuẩn quốc tế" role="button" tabindex="0">
+                            <div class="hero-epa-mobile-header">
+                                <div class="hero-epa-mobile-title">
+                                    <svg class="widget-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                        <polyline points="14 2 14 8 20 8" />
+                                        <line x1="16" y1="13" x2="8" y2="13" />
+                                        <line x1="16" y1="17" x2="8" y2="17" />
+                                    </svg>
+                                    <span>Thang Đo AQI Chuẩn Quốc Tế</span>
+                                </div>
+                                <span class="widget-action-hint">Bảng đối chiếu ↗</span>
+                            </div>
+
+                            <!-- Dải màu quang phổ mini 6 cấp độ -->
+                            <div class="epa-spectrum-bar-wrap">
+                                <div class="epa-spectrum-bar"></div>
+                                <div class="epa-spectrum-ticks">
+                                    <span>0</span>
+                                    <span>50</span>
+                                    <span>100</span>
+                                    <span>150</span>
+                                    <span>200</span>
+                                    <span>300+</span>
+                                </div>
+                            </div>
+
+                            <div class="epa-compact-preview">
+                                <div class="epa-compact-badge">
+                                    <span class="epa-compact-dot"></span>
+                                    <span class="epa-compact-text">Mức hiện tại: Đang nạp...</span>
+                                </div>
+                                <span class="epa-btn-link">🔍 Chạm tra cứu chuẩn US EPA, WHO &amp; QCVN 05:2023</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Khối Phải: Bộ chọn nhóm đối tượng sức khỏe & Lời khuyên tức thì -->
+                    <div class="hero-persona-col">
+                        <div class="hero-persona-header">
+                            <div class="hero-section-title-wrap">
+                                <svg class="widget-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    <path d="m9 12 2 2 4-4" />
+                                </svg>
+                                <h2 class="hero-section-title">Nhóm Đối Tượng Sức Khỏe &amp; Khuyến Cáo Tức Thì</h2>
+                            </div>
+                            <span class="persona-target-tag" id="persona-target-tag">Đối tượng: Toàn dân</span>
+                        </div>
+
+                        <!-- 4 Nhóm đối tượng dạng lưới ngang -->
+                        <div class="persona-horizontal-grid" id="persona-pills">
+                            <button class="persona-pill active" data-persona="general">
+                                <div class="persona-pill-left">
+                                    <svg class="pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                        <circle cx="9" cy="7" r="4" />
+                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                    </svg>
+                                    <span>Toàn dân</span>
+                                </div>
+                                <span class="persona-threshold-badge">AQI &gt; 150</span>
+                            </button>
+                            <button class="persona-pill" data-persona="children">
+                                <div class="persona-pill-left">
+                                    <svg class="pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <circle cx="12" cy="7" r="4" />
+                                        <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+                                        <path d="M8 3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2" />
+                                    </svg>
+                                    <span>Trẻ em &amp; Học sinh</span>
+                                </div>
+                                <span class="persona-threshold-badge">AQI &gt; 100</span>
+                            </button>
+                            <button class="persona-pill" data-persona="elderly">
+                                <div class="persona-pill-left">
+                                    <svg class="pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                        <path d="m9 12 2 2 4-4" />
+                                    </svg>
+                                    <span>Người cao tuổi</span>
+                                </div>
+                                <span class="persona-threshold-badge">AQI &gt; 100</span>
+                            </button>
+                            <button class="persona-pill" data-persona="asthma">
+                                <div class="persona-pill-left">
+                                    <svg class="pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                                    </svg>
+                                    <span>Hô hấp &amp; Tim mạch</span>
+                                </div>
+                                <span class="persona-threshold-badge">AQI &gt; 100</span>
+                            </button>
+                        </div>
+
+                        <!-- Khung lời khuyên y tế ngay trong Hero -->
+                        <div class="hero-advice-box">
+                            <div class="advice-status-badge" id="advice-status-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    <path d="m9 12 2 2 4-4" />
+                                </svg>
+                                <span id="advice-title">ĐÁNH GIÁ: TỐT</span>
+                            </div>
+                            <p class="advice-text" id="advice-text">Chất lượng không khí trong lành, thuận lợi cho mọi
+                                hoạt động sinh hoạt, rèn luyện thể chất và đi lại ngoài trời.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BỐ CỤC LƯỚI PC 8 : 4 (8 CỘT CHI TIẾT - 4 CỘT WIDGET) -->
+            <main class="dashboard-grid-pc">
+
+                <!-- ==============================================================
+                     CỘT TRÁI (8 PHẦN): THÔNG TIN QUAN TRỌNG HIỂN THỊ CHI TIẾT
+                     - Khung Kế hoạch giờ an toàn & Khuyến nghị đi lại
+                     - Biểu đồ 2: Kế hoạch di chuyển 24h theo giờ (Hourly Commute Safety)
+                     - Biểu đồ 1: Dự báo chất lượng không khí 48h tới
+                     - Biểu đồ 3: So sánh 12 trạm toàn thành phố
+                     ============================================================== -->
+                <div class="grid-col-left">
+
+                    <!-- CARD KHUYẾN NGHỊ DI CHUYỂN & GIỜ VÀNG AN TOÀN -->
+                    <section class="liquid-glass-card advice-card-large" aria-label="Khuyến nghị di chuyển an toàn">
+                        <canvas class="glass-canvas"></canvas>
+                        <div class="card-content advice-large-content">
+                            <div class="travel-planner-box" id="travel-planner-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                                </svg>
+                                <div>
+                                    <strong>Khuyến nghị lộ trình di chuyển an toàn trong ngày:</strong>
+                                    <span id="travel-planner-text">Khung giờ an toàn nhất: 06:00 - 08:30 và sau 20:00.
+                                        Hạn chế thể dục lúc cao điểm giao thông (17:30 - 19:30).</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- BIỂU ĐỒ 2: KẾ HOẠCH DI CHUYỂN 24 GIỜ THEO GIỜ (CHI TIẾT 8 CỘT) -->
+                    <section class="liquid-glass-card main-chart-card" onclick="openChart('chart2-box')"
+                        aria-label="Kế hoạch di chuyển theo giờ 24h">
+                        <canvas class="glass-canvas"></canvas>
+                        <div class="card-content">
+                            <div class="main-chart-header">
+                                <div class="main-chart-title-wrap">
+                                    <svg class="main-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <polyline points="12 6 12 12 16 14" />
+                                    </svg>
+                                    <h2 class="main-chart-title">Kế Hoạch Di Chuyển Theo Giờ (24h Commute Safety)</h2>
+                                </div>
+                                <div class="chart-header-badge">
+                                    <span id="chart2-metric">Dự báo 24 giờ</span>
+                                </div>
+                            </div>
+
+                            <div class="main-chart-canvas-wrap">
+                                <canvas id="chart2"></canvas>
+                            </div>
+
+                            <!-- Chú thích chi tiết dễ hiểu cho người dân -->
+                            <div class="chart-guide-box">
+                                <div>
+                                    <strong>Hướng dẫn đọc biểu đồ:</strong> Biểu đồ thể hiện mức độ ô nhiễm qua từng
+                                    khung giờ từ 00:00 đến 23:00. Cột màu <strong
+                                        style="color:var(--color-success)">Xanh lá</strong> là khung giờ an toàn nhất để
+                                    người dân đi làm, tập thể dục ngoài trời hoặc mở cửa thông gió. Cột màu <strong
+                                        style="color:var(--color-warning)">Vàng</strong> hoặc <strong
+                                        style="color:var(--color-danger)">Đỏ</strong> cảnh báo thời điểm bụi mịn và khí
+                                    thải xe cộ đậm đặc (thường là giờ cao điểm sáng và chiều tối) — nên đeo khẩu trang
+                                    N95 và hạn chế di chuyển kéo dài ngoài đường.
+                                </div>
+                                <div class="guide-legend-row">
+                                    <span class="guide-legend-item"><span class="legend-dot green"></span> Giờ vàng an
+                                        toàn (AQI ≤ 50)</span>
+                                    <span class="guide-legend-item"><span class="legend-dot yellow"></span> Trung bình
+                                        (AQI 51 - 100)</span>
+                                    <span class="guide-legend-item"><span class="legend-dot red"></span> Cao điểm ô
+                                        nhiễm (AQI &gt; 100)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- BIỂU ĐỒ 1: DỰ BÁO CHẤT LƯỢNG KHÔNG KHÍ 48 GIỜ TỚI (CHI TIẾT 8 CỘT) -->
+                    <section class="liquid-glass-card main-chart-card" onclick="openChart('chart1-box')"
+                        aria-label="Dự báo chất lượng không khí 48 giờ">
+                        <canvas class="glass-canvas"></canvas>
+                        <div class="card-content">
+                            <div class="main-chart-header">
+                                <div class="main-chart-title-wrap">
+                                    <svg class="main-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                                        <polyline points="16 7 22 7 22 13" />
+                                    </svg>
+                                    <h2 class="main-chart-title">Dự Báo Chất Lượng Không Khí 48 Giờ Tới</h2>
+                                </div>
+                                <div class="chart-header-badge">
+                                    <span id="chart1-metric">Mô hình khí quyển chuyên sâu</span>
+                                </div>
+                            </div>
+
+                            <div class="main-chart-canvas-wrap">
+                                <canvas id="chart1"></canvas>
+                            </div>
+
+                            <!-- Chú thích chi tiết cho người dân -->
+                            <div class="chart-guide-box">
+                                <div>
+                                    <strong>Ý nghĩa dự báo 48h:</strong> Đường biểu diễn xu hướng chất lượng không khí
+                                    trong 2 ngày tiếp theo được tính toán tự động bởi mô hình dự báo môi trường (dựa
+                                    trên dữ liệu khí thải, hướng gió và nhiệt độ). Hai đường nét đứt màu xanh (mức 50)
+                                    và vàng (mức 100) là các ngưỡng cảnh báo y tế. Người dân có thể quan sát xu hướng để
+                                    chủ động lên lịch công tác, dã ngoại hoặc bảo vệ trẻ nhỏ trong gia đình.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- BIỂU ĐỒ 3: SO SÁNH 12 TRẠM QUAN TRẮC TOÀN THÀNH PHỐ (CHI TIẾT 8 CỘT) -->
+                    <section class="liquid-glass-card main-chart-card" onclick="openChart('chart3-box')"
+                        aria-label="So sánh 12 trạm quan trắc">
+                        <canvas class="glass-canvas"></canvas>
+                        <div class="card-content">
+                            <div class="main-chart-header">
+                                <div class="main-chart-title-wrap">
+                                    <svg class="main-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <line x1="18" y1="20" x2="18" y2="10" />
+                                        <line x1="12" y1="20" x2="12" y2="4" />
+                                        <line x1="6" y1="20" x2="6" y2="14" />
+                                    </svg>
+                                    <h2 class="main-chart-title">Tương Quan Chất Lượng Không Khí 12 Trạm Toàn Thành Phố
+                                    </h2>
+                                </div>
+                                <div class="chart-header-badge">
+                                    <span id="chart3-metric">Định hướng khu vực sạch</span>
+                                </div>
+                            </div>
+
+                            <div class="main-chart-canvas-wrap">
+                                <canvas id="chart3"></canvas>
+                            </div>
+
+                            <!-- Chú thích chi tiết cho người dân -->
+                            <div class="chart-guide-box">
+                                <div>
+                                    <strong>Ứng dụng chọn tuyến đường:</strong> Thể hiện tương quan chỉ số AQI giữa các
+                                    trạm đo trên toàn địa bàn. Người dân có thể quan sát để ưu tiên đi qua các khu vực
+                                    có màu xanh (không khí trong lành hơn) và hạn chế lưu thông lâu tại các điểm nóng có
+                                    chỉ số ô nhiễm vượt ngưỡng.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- ==============================================================
+                     CỘT PHẢI (4 PHẦN): CÁC WIDGET BỔ TRỢ & ĐIỀU KHIỂN NHANH
+                     - Đồng hồ tròn AQI (Circular Gauge)
+                     - Bảng thang đo 6 cấp độ chuẩn EPA
+                     - Bộ chọn nhóm đối tượng nhạy cảm (Persona Switcher)
+                     - Widget 4: Radar đa chất ô nhiễm
+                     - Widget 5: Xu hướng theo tháng & mùa
+                     - Widget 6: Tỷ lệ phân cấp cả năm
+                     ============================================================== -->
+                <div class="grid-col-right">
+
+                    <!-- WIDGET 1: THANG ĐO AQI CHUẨN QUỐC TẾ (RÚT GỌN - CLICK MỞ BẢNG TRA CỨU QUỐC TẾ) -->
+                    <section class="liquid-glass-card widget-card epa-summary-widget" onclick="openChart('epa-box')"
+                        aria-label="Thang đo AQI chuẩn quốc tế rút gọn" role="button" tabindex="0">
+                        <canvas class="glass-canvas"></canvas>
+                        <div class="card-content">
+                            <div class="widget-header">
+                                <div class="widget-title-wrap">
+                                    <svg class="widget-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                        <polyline points="14 2 14 8 20 8" />
+                                        <line x1="16" y1="13" x2="8" y2="13" />
+                                        <line x1="16" y1="17" x2="8" y2="17" />
+                                    </svg>
+                                    <h3 class="widget-title">Thang Đo Chuẩn Quốc Tế</h3>
+                                </div>
+                                <span class="widget-action-hint">Chi tiết ↗</span>
+                            </div>
+
+                            <!-- Dải màu quang phổ mini 6 cấp độ -->
+                            <div class="epa-spectrum-bar-wrap">
+                                <div class="epa-spectrum-bar"></div>
+                                <div class="epa-spectrum-ticks">
+                                    <span>0</span>
+                                    <span>50</span>
+                                    <span>100</span>
+                                    <span>150</span>
+                                    <span>200</span>
+                                    <span>300+</span>
+                                </div>
+                            </div>
+
+                            <div class="epa-compact-preview">
+                                <div class="epa-compact-badge" id="epa-compact-badge">
+                                    <span class="epa-compact-dot" id="epa-compact-dot"></span>
+                                    <span class="epa-compact-text" id="epa-compact-text">Mức hiện tại: Đang
+                                        tải...</span>
+                                </div>
+                                <span class="epa-btn-link">🔍 Bấm để tra cứu chuẩn EPA, WHO &amp; QCVN</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- WIDGET 4: RADAR ĐA CHẤT Ô NHIỄM (POLLUTANT PROFILE) -->
+                    <section class="liquid-glass-card widget-card" onclick="openChart('chart4-box')"
+                        aria-label="Hồ sơ đa chất ô nhiễm">
+                        <canvas class="glass-canvas"></canvas>
+                        <div class="card-content">
+                            <div class="widget-header">
+                                <div class="widget-title-wrap">
+                                    <svg class="widget-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="2" />
+                                        <path
+                                            d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14" />
+                                    </svg>
+                                    <h3 class="widget-title">Hồ Sơ Đa Chất Ô Nhiễm</h3>
+                                </div>
+                                <span class="widget-action-hint">Chi tiết ↗</span>
+                            </div>
+
+                            <div class="widget-canvas-wrap">
+                                <canvas id="chart4"></canvas>
+                            </div>
+                            <div class="widget-metric-badge">
+                                <span id="chart4-metric">--</span>
+                            </div>
+                            <p class="widget-note">Radar 6 chất ô nhiễm: Vùng diện tích càng thu nhỏ thì không khí càng
+                                sạch. Góc nhô cao cho biết chất ô nhiễm chủ đạo.</p>
+                        </div>
+                    </section>
+
+                    <!-- WIDGET 5: XU HƯỚNG PM2.5 THEO MÙA / THÁNG (SEASONAL TREND) -->
+                    <section class="liquid-glass-card widget-card" onclick="openChart('chart5-box')"
+                        aria-label="Xu hướng PM2.5 theo tháng">
+                        <canvas class="glass-canvas"></canvas>
+                        <div class="card-content">
+                            <div class="widget-header">
+                                <div class="widget-title-wrap">
+                                    <svg class="widget-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                        <line x1="16" y1="2" x2="16" y2="6" />
+                                        <line x1="8" y1="2" x2="8" y2="6" />
+                                        <line x1="3" y1="10" x2="21" y2="10" />
+                                    </svg>
+                                    <h3 class="widget-title">Xu Hướng PM2.5 Theo Mùa</h3>
+                                </div>
+                            </div>
+                            <div class="widget-canvas-wrap">
+                                <canvas id="chart5"></canvas>
+                            </div>
+                            <div class="widget-metric-badge">
+                                <span id="chart5-metric">--</span>
+                            </div>
+                            <p class="widget-note">Mùa Đông - Xuân (tháng 11 - 2) nồng độ bụi thường tăng do hiện tượng
+                                nghịch nhiệt giữ chất ô nhiễm sát mặt đất.</p>
+                        </div>
+                    </section>
+
+                    <!-- WIDGET 6: TỶ LỆ PHÂN CẤP CẢ NĂM (ANNUAL AQI BREAKDOWN) -->
+                    <section class="liquid-glass-card widget-card" onclick="openChart('chart6-box')"
+                        aria-label="Tỷ lệ phân cấp cả năm">
+                        <canvas class="glass-canvas"></canvas>
+                        <div class="card-content">
+                            <div class="widget-header">
+                                <div class="widget-title-wrap">
+                                    <svg class="widget-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+                                        <path d="M22 12A10 10 0 0 0 12 2v10z" />
+                                    </svg>
+                                    <h3 class="widget-title">Tỷ Lệ Phân Cấp Cả Năm</h3>
+                                </div>
+                            </div>
+                            <div class="widget-canvas-wrap">
+                                <canvas id="chart6"></canvas>
+                            </div>
+                            <div class="widget-metric-badge">
+                                <span id="chart6-metric">--</span>
+                            </div>
+                            <p class="widget-note">Thống kê phần trăm các ngày trong năm đạt chuẩn Tốt, Trung bình, Kém
+                                và Xấu tại trạm quan trắc.</p>
+                        </div>
+                    </section>
+
+                </div>
+            </main>
+
+            <div class="spacer"></div>
+
+            <!-- UI BOTTOM: THANH ĐIỀU CHỈNH ÁNH SÁNG MÔ PHỎNG NGÀY & ĐÊM -->
+            <footer class="ui-bottom">
+                <p class="caption">Hít thở hôm nay — <strong>nghĩ cho tương lai</strong></p>
+                <div class="slider-wrap">
+                    <span class="slider-end">Rạng đông</span>
+                    <input type="range" id="time" min="0" max="1000" value="600"
+                        aria-label="Thanh trượt thời gian ngày đêm">
+                    <span class="slider-end">Bóng đêm</span>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- CỬA SỔ PHÓNG TO CHI TIẾT (MODAL POPUP KHI NGƯỜI DÂN CLICK VÀO BIỂU ĐỒ) -->
+    <div id="chart-modal" class="glass-modal" role="dialog" aria-modal="true" aria-label="Cửa sổ biểu đồ chi tiết">
+        <div class="modal-overlay" onclick="closeChart()"></div>
+        <div class="static-glass-card">
+            <button class="modal-close" onclick="closeChart()" aria-label="Đóng cửa sổ">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+
+            <!-- MODAL THANG ĐO AQI QUY CHUẨN QUỐC TẾ (US EPA, WHO & QCVN) -->
+            <div class="chart-box" id="epa-box">
+                <div class="epa-modal-header">
+                    <h3 class="epa-modal-title">Quy Chuẩn Thang Đo Chất Lượng Không Khí (AQI) Quốc Tế</h3>
+                    <p class="epa-modal-subtitle">Đối chiếu giữa Chuẩn Bảo vệ Môi trường Hoa Kỳ (US EPA), Tổ chức Y tế
+                        Thế giới (WHO) và Quy chuẩn Kỹ thuật Quốc gia QCVN 05:2023/BTNMT</p>
+                </div>
+                <div class="epa-table-wrapper">
+                    <table class="epa-table">
+                        <thead>
+                            <tr>
+                                <th>Cấp độ</th>
+                                <th>Dải AQI</th>
+                                <th>PM2.5 (µg/m³)</th>
+                                <th>Tác động sức khỏe cộng đồng</th>
+                                <th>Khuyến nghị y tế bảo vệ gia đình</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="epa-row-green">
+                                <td><span class="epa-badge-pill green">Tốt</span></td>
+                                <td><strong>0 - 50</strong></td>
+                                <td>0.0 - 12.0</td>
+                                <td>Chất lượng không khí trong lành, lý tưởng, không gây hại cho sức khỏe.</td>
+                                <td>Thoải mái tham gia mọi hoạt động dã ngoại, thể thao ngoài trời và mở cửa thông gió
+                                    nhà ở.</td>
+                            </tr>
+                            <tr class="epa-row-yellow">
+                                <td><span class="epa-badge-pill yellow">Trung bình</span></td>
+                                <td><strong>51 - 100</strong></td>
+                                <td>12.1 - 35.4</td>
+                                <td>Chấp nhận được cho số đông; nhóm người cực kỳ nhạy cảm có thể bị kích ứng nhẹ đường
+                                    thở.</td>
+                                <td>Người mắc bệnh hen suyễn, viêm phế quản mãn tính nên theo dõi triệu chứng ho hoặc
+                                    khó thở.</td>
+                            </tr>
+                            <tr class="epa-row-orange">
+                                <td><span class="epa-badge-pill orange">Kém</span></td>
+                                <td><strong>101 - 150</strong></td>
+                                <td>35.5 - 55.4</td>
+                                <td>Nhóm nhạy cảm (trẻ em, người già, người bệnh phổi/tim mạch) bắt đầu chịu tác động
+                                    tiêu cực.</td>
+                                <td>Nhóm nhạy cảm nên hạn chế tập thể dục gắng sức ngoài trời; đóng cửa sổ phía mặt
+                                    đường đông xe.</td>
+                            </tr>
+                            <tr class="epa-row-red">
+                                <td><span class="epa-badge-pill red">Xấu</span></td>
+                                <td><strong>151 - 200</strong></td>
+                                <td>55.5 - 150.4</td>
+                                <td>Bắt đầu ảnh hưởng xấu đến sức khỏe toàn dân; nhóm người nhạy cảm đối mặt nguy cơ
+                                    nghiêm trọng.</td>
+                                <td>Toàn dân nên đeo khẩu trang chống bụi mịn N95 khi ra ngoài; hạn chế tối đa hoạt động
+                                    thể chất ngoài phố.</td>
+                            </tr>
+                            <tr class="epa-row-purple">
+                                <td><span class="epa-badge-pill purple">Rất xấu</span></td>
+                                <td><strong>201 - 300</strong></td>
+                                <td>150.5 - 250.4</td>
+                                <td>Cảnh báo y tế khẩn cấp; toàn bộ cộng đồng dân cư có nguy cơ bị kích ứng và suy giảm
+                                    chức năng hô hấp.</td>
+                                <td>Người già và trẻ nhỏ ở yên trong nhà; bật máy lọc không khí liên tục; chuyển trường
+                                    học/công sở sang chế độ an toàn.</td>
+                            </tr>
+                            <tr class="epa-row-maroon">
+                                <td><span class="epa-badge-pill maroon">Nguy hại</span></td>
+                                <td><strong>&gt; 300</strong></td>
+                                <td>&gt; 250.4</td>
+                                <td>Báo động đỏ khẩn cấp toàn đô thị; nguy cơ ngộ độc cấp tính đường hô hấp đối với mọi
+                                    lứa tuổi.</td>
+                                <td>Tránh tuyệt đối mọi hoạt động ngoài trời; bịt kín khe cửa sổ; tuân thủ hướng dẫn y
+                                    tế khẩn cấp từ cơ quan chức năng.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MODAL BIỂU ĐỒ 1: DỰ BÁO 48 GIỜ -->
+            <div class="chart-box" id="chart1-box">
+                <div class="chart-container"><canvas id="chart1-detail"></canvas></div>
+                <div class="chart-comment-box">
+                    <p class="chart-comment"><strong>Dự báo chuyên sâu 48 giờ tới:</strong> <span id="chart1-comment">Mô
+                            hình khí quyển tự động tính toán và dự báo nồng độ ô nhiễm cùng chỉ số AQI cho 48 giờ tiếp
+                            theo nhằm cảnh báo sớm tình trạng chất lượng không khí.</span></p>
+                </div>
+            </div>
+
+            <!-- MODAL BIỂU ĐỒ 2: KẾ HOẠCH DI CHUYỂN 24 GIỜ THEO GIỜ -->
+            <div class="chart-box" id="chart2-box">
+                <div class="chart-container"><canvas id="chart2-detail"></canvas></div>
+                <div class="chart-comment-box">
+                    <p class="chart-comment"><strong>Kế hoạch di chuyển theo giờ:</strong> <span
+                            id="chart2-comment">Biểu đồ thể hiện mức độ ô nhiễm qua 24 khung giờ trong ngày. Màu xanh
+                            biểu thị khung giờ lý tưởng để ra ngoài, màu vàng/đỏ khuyến cáo hạn chế lưu thông.</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- MODAL BIỂU ĐỒ 3: SO SÁNH 12 TRẠM -->
+            <div class="chart-box" id="chart3-box">
+                <div class="chart-container"><canvas id="chart3-detail"></canvas></div>
+                <div class="chart-comment-box">
+                    <p class="chart-comment"><strong>Tương quan 12 trạm toàn thành phố:</strong> <span
+                            id="chart3-comment">So sánh chỉ số AQI giữa các trạm để người dân định hướng lộ trình di
+                            chuyển qua các khu vực có không khí sạch hơn.</span></p>
+                </div>
+            </div>
+
+            <!-- MODAL BIỂU ĐỒ 4: HỒ SƠ ĐA CHẤT Ô NHIỄM -->
+            <div class="chart-box" id="chart4-box">
+                <div class="chart-container"><canvas id="chart4-detail"></canvas></div>
+                <div class="chart-comment-box">
+                    <p class="chart-comment"><strong>Hồ sơ nồng độ đa chất:</strong> <span id="chart4-comment">Đánh giá
+                            6 chỉ số ô nhiễm chính (PM2.5, PM10, SO2, NO2, CO, O3) so với ngưỡng trung bình đô
+                            thị.</span></p>
+                </div>
+            </div>
+
+            <!-- MODAL BIỂU ĐỒ 5: XU HƯỚNG THEO THÁNG & MÙA -->
+            <div class="chart-box" id="chart5-box">
+                <div class="chart-container"><canvas id="chart5-detail"></canvas></div>
+                <div class="chart-comment-box">
+                    <p class="chart-comment"><strong>Xu hướng chu kỳ theo mùa:</strong> <span id="chart5-comment">Nồng
+                            độ bụi mịn PM2.5 trung bình 12 tháng, làm rõ hiện tượng nghịch nhiệt mùa Đông - Xuân khi
+                            không khí bị nén giữ gần mặt đất.</span></p>
+                </div>
+            </div>
+
+            <!-- MODAL BIỂU ĐỒ 6: TỶ LỆ PHÂN CẤP CẢ NĂM -->
+            <div class="chart-box" id="chart6-box">
+                <div class="chart-container"><canvas id="chart6-detail"></canvas></div>
+                <div class="chart-comment-box">
+                    <p class="chart-comment"><strong>Phân bổ chất lượng không khí:</strong> <span id="chart6-comment">Tỷ
+                            lệ số ngày đạt các cấp độ Tốt, Trung bình, Kém, Xấu và Nguy hại trong năm tại trạm quan
+                            sát.</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/ocean.js"></script>
+    <script src="js/gauge.js"></script>
+    <script src="js/cards.js"></script>
+    <script src="js/charts.js"></script>
+</body>
+
+</html>

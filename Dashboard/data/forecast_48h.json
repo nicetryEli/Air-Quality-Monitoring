@@ -1,7 +1,7 @@
 {
   "model_id": 1,
   "version": "v3.2.1",
-  "generated_at": "2026-09-16T08:49:20Z",
+  "generated_at": "2026-09-15T13:22:31Z",
   "base_datetime": "2017-02-26 23:00:00",
   "forecast_horizon_hours": 48,
   "total_stations": 12,

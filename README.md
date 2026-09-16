@@ -107,6 +107,7 @@ Toàn bộ tài liệu chi tiết phục vụ phát triển, nghiệm thu và t�
 2. [Hợp đồng API RESTful (API Contract)](docs/API_CONTRACT.md): Tài liệu kỹ thuật định nghĩa chi tiết 9 endpoint REST, cấu trúc JSON Request/Response, tham số truy vấn, mã lỗi HTTP và cơ chế xác thực API Key.
 3. [Báo cáo Huấn luyện & Đánh giá Mô hình ML (Model Training Report)](docs/MODEL_TRAINING_REPORT.md): Phân tích bài toán dự báo 48h, 38 đặc trưng trích xuất (lags, rolling, chu kỳ, khí tượng), chiến lược Time-Series Split 80/20 và kết quả thực nghiệm (MAE: 68.25, RMSE: 92.87, độ chính xác phân cấp F1-score).
 4. [Tài liệu Kiến trúc Hệ thống (Project Architecture)](docs/PROJECT_ARCHITECTURE_DOCUMENTATION.md): Sơ đồ luồng dữ liệu 3 tầng (ML Pipeline -> Spring Boot Backend -> Frontend Client).
+5. [Nghiên Cứu Lý Thuyết & Thực Nghiệm Đánh Giá Mô Hình (Jupyter Notebook)](docs/Model_Theory_and_Performance_Evaluation.ipynb): Trình bày toàn diện nền tảng toán học của thuật toán Gradient Boosting, công thức toán học, lý giải nguyên nhân vật lý/khí quyển của 38 đặc trưng, cùng các biểu đồ trực quan hóa sai số thực nghiệm, khoảng tin cậy 95%, tầm quan trọng đặc trưng và ma trận nhầm lẫn phân cấp 6 mức AQI.
 
 ---
 

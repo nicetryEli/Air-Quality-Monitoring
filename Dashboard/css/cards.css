@@ -1,0 +1,953 @@
+/* ================================================================
+   CARDS & LAYOUT STYLESHEET (SUPPORT SÁNG / TỐI & BẦU TRỜ DYNAMIC)
+================================================================ */
+
+/* ── 3-DAY SWITCHER PILLS ── */
+.day-switcher-pills {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.day-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.day-pill:hover {
+    color: var(--color-text);
+    background: var(--color-surface-hover);
+}
+
+.day-pill.active {
+    color: #ffffff;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    font-weight: 700;
+    box-shadow: 0 2px 10px var(--color-primary-glow);
+}
+
+.day-pill-date {
+    font-size: 11.5px;
+    opacity: 0.9;
+    padding-left: 2px;
+}
+
+.station-select-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.glass-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 8px 36px 8px 16px;
+    color: var(--color-text);
+    font-family: var(--font-main);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    outline: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230284c7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 13px auto;
+    transition: all 0.2s ease;
+}
+
+.glass-select:hover, .glass-select:focus {
+    background-color: var(--color-surface-hover);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+
+.glass-select option {
+    background: var(--color-surface);
+    color: var(--color-text);
+    padding: 8px;
+}
+
+/* ── HERO OVERVIEW CARD (ĐỒNG HỒ AQI & PERSONA SWITCHER Ở ĐẦU TRANG) ── */
+.hero-overview-card {
+    width: 100%;
+    padding: 24px 28px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--card-shadow);
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-content-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 32px;
+    align-items: center;
+    width: 100%;
+}
+
+.hero-gauge-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding-right: 16px;
+    border-right: 1px solid var(--color-border);
+}
+
+.hero-station-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+}
+
+.hero-station-name {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+}
+
+.hero-obs-note {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.hero-persona-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+}
+
+.hero-persona-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.hero-section-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hero-section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+}
+
+.persona-target-tag {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--color-primary);
+    background: var(--color-surface-sub);
+    padding: 5px 14px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+}
+
+/* Lưới ngang 4 nút chọn đối tượng */
+.persona-horizontal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+.persona-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+    background: var(--color-surface-sub);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    text-align: left;
+}
+
+.persona-pill:hover {
+    color: var(--color-text);
+    background: var(--color-surface-hover);
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+.persona-pill.active {
+    color: #ffffff;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px var(--color-primary-glow);
+}
+
+.persona-pill-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.persona-pill-left span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pill-icon {
+    width: 17px;
+    height: 17px;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    flex-shrink: 0;
+}
+
+.persona-threshold-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: var(--color-surface-hover);
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+}
+
+.persona-pill.active .persona-threshold-badge {
+    background: rgba(255, 255, 255, 0.28);
+    color: #ffffff;
+}
+
+.hero-advice-box {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    background: var(--color-surface-sub);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
+
+.advice-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #059669;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.advice-status-badge svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+}
+
+.advice-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    margin: 0;
+}
+
+/* ── 8 - 4 MASTER GRID SYSTEM FOR PC ── */
+.dashboard-grid-pc {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 8fr 4fr;
+    gap: 24px;
+    align-items: start;
+    z-index: 10;
+}
+
+.grid-col-left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+}
+
+.grid-col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+}
+
+/* ── SOLID CARD BASE ── */
+.liquid-glass-card {
+    position: relative;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background 0.25s ease;
+}
+
+.liquid-glass-card:hover {
+    border-color: var(--color-border-hover);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.glass-canvas {
+    display: none !important;
+}
+
+.card-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+/* ── CARD KHUYẾN NGHỊ DI CHUYỂN (LEFT 8) ── */
+.advice-card-large {
+    padding: 20px 24px;
+}
+
+.advice-large-content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.travel-planner-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--color-surface-sub);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.94rem;
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+.travel-planner-box svg {
+    width: 22px;
+    height: 22px;
+    stroke: var(--color-primary);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.travel-planner-box strong {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* ── LARGE DETAILED CHARTS (LEFT 8) ── */
+.main-chart-card {
+    padding: 24px 28px;
+    cursor: pointer;
+}
+
+.main-chart-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.main-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.main-chart-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.main-card-icon {
+    width: 20px;
+    height: 20px;
+    stroke: var(--color-primary);
+}
+
+.main-chart-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+}
+
+.chart-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    background: var(--color-surface-sub);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.main-chart-canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    margin-bottom: 16px;
+}
+
+/* Chú thích hướng dẫn người dân */
+.chart-guide-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 16px;
+    background: var(--color-surface-sub);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+.guide-legend-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 4px;
+}
+
+.guide-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.legend-dot.green { background: #10b981; }
+.legend-dot.yellow { background: #f59e0b; }
+.legend-dot.red { background: #ef4444; }
+
+/* ── SIDEBAR WIDGETS (RIGHT 4) ── */
+.widget-card {
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    cursor: pointer;
+}
+
+.widget-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.widget-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.widget-icon {
+    width: 18px;
+    height: 18px;
+    stroke: var(--color-primary);
+}
+
+.widget-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+}
+
+.widget-action-hint {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary);
+    transition: transform 0.2s ease;
+}
+
+.widget-card:hover .widget-action-hint {
+    transform: translate(2px, -2px);
+}
+
+.widget-canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    margin: 4px 0 8px 0;
+}
+
+[data-theme="dark"] #chart4,
+[data-theme="dark"] #chart4-detail {
+    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.22));
+}
+
+
+.widget-metric-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-sub);
+    border: 1px solid var(--color-border);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.widget-note {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    background: var(--color-surface-sub);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+}
+
+/* ── WIDGET: THANG ĐO AQI CHUẨN QUỐC TẾ RÚT GỌN ── */
+.epa-summary-widget {
+    cursor: pointer;
+}
+
+.epa-spectrum-bar-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 4px 0 8px 0;
+}
+
+.epa-spectrum-bar {
+    width: 100%;
+    height: 10px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(
+        90deg, 
+        #10b981 0% 16.6%, 
+        #facc15 16.6% 33.3%, 
+        #fb923c 33.3% 50%, 
+        #f87171 50% 66.6%, 
+        #a855f7 66.6% 83.3%, 
+        #e11d48 83.3% 100%
+    );
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.epa-spectrum-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    padding: 0 2px;
+}
+
+.epa-compact-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--color-surface-sub);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
+
+.epa-compact-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.epa-compact-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+}
+
+.epa-btn-link {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ── THANG ĐO AQI QUỐC TẾ ĐẶT NGAY DƯỚI ĐỒNG HỒ AQI (CHO GIAO DIỆN ĐIỆN THOẠI) ── */
+.hero-epa-mobile-scale {
+    display: none; /* Mặc định ẩn trên màn hình PC lớn để giữ widget ở cột phải 8:4 */
+    width: 100%;
+    max-width: 320px;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--color-surface-sub);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.hero-epa-mobile-scale:hover {
+    border-color: var(--color-primary);
+    background: var(--color-surface-hover);
+    transform: translateY(-1px);
+}
+
+.hero-epa-mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.hero-epa-mobile-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.hero-epa-mobile-title svg {
+    width: 15px;
+    height: 15px;
+    stroke: var(--color-primary);
+}
+
+/* ── CỬA SỔ NỔI (MODAL) CHỨA BIỂU ĐỒ & BẢNG QUY CHUẨN QUỐC TẾ ── */
+
+.glass-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.25s, opacity 0.25s ease;
+}
+
+.glass-modal.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.static-glass-card {
+    position: relative;
+    z-index: 10;
+    width: min(920px, 94vw);
+    max-height: 88vh;
+    padding: 32px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    color: var(--color-text);
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-sub);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.modal-close:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #dc2626;
+}
+
+.modal-close svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+}
+
+.chart-box {
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.chart-box.active {
+    display: flex;
+    animation: fadeInModal 0.25s ease forwards;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 320px;
+}
+
+.chart-comment-box {
+    padding: 14px 18px;
+    background: var(--color-surface-sub);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
+
+.chart-comment {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.chart-comment strong {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* ── BẢNG THANG ĐO QUỐC TẾ (US EPA, WHO & QCVN 05:2023) TRONG MODAL ── */
+.epa-modal-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.epa-modal-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+}
+
+.epa-modal-subtitle {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+.epa-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    margin-top: 6px;
+}
+
+.epa-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    text-align: left;
+}
+
+.epa-table th {
+    background: var(--color-surface-sub);
+    color: var(--color-text);
+    font-weight: 700;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+}
+
+.epa-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+    line-height: 1.5;
+    vertical-align: middle;
+}
+
+.epa-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.epa-table tbody tr:hover {
+    background: var(--color-surface-hover);
+}
+
+.epa-badge-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.epa-badge-pill.green { background: #10b981; }
+.epa-badge-pill.yellow { background: #d97706; }
+.epa-badge-pill.orange { background: #ea580c; }
+.epa-badge-pill.red { background: #dc2626; }
+.epa-badge-pill.purple { background: #9333ea; }
+.epa-badge-pill.maroon { background: #be123c; }
+
+/* ── RESPONSIVE BREAKPOINTS ── */
+@media (max-width: 1023px) {
+    .hero-content-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .hero-gauge-col {
+        border-right: none;
+        padding-right: 0;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--color-border);
+    }
+    /* Yêu cầu: Thông tin về chỉ số AQI theo quy chuẩn quốc tế hiện ở ngay dưới đồng hồ AQI trên điện thoại */
+    .hero-epa-mobile-scale {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 360px;
+        margin-top: 14px;
+    }
+    /* Ẩn widget thang đo lặp lại ở danh sách widget dưới trên điện thoại */
+    .grid-col-right .epa-summary-widget {
+        display: none !important;
+    }
+    .dashboard-grid-pc {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .main-chart-card {
+        padding: 20px 20px;
+    }
+    .main-chart-canvas-wrap {
+        height: 220px;
+    }
+}
+
+@media (max-width: 680px) {
+    .dashboard-content {
+        padding: 16px 12px 36px 12px;
+        gap: 16px;
+    }
+    .dashboard-top-bar {
+        padding: 14px 16px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .top-bar-right {
+        justify-content: space-between;
+    }
+    .day-switcher-pills {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .day-pill {
+        padding: 6px 10px;
+        font-size: 11.5px;
+    }
+    .top-bar-title {
+        font-size: 1.25rem;
+    }
+    .hero-overview-card {
+        padding: 18px 16px;
+    }
+    .persona-horizontal-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero-advice-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .static-glass-card {
+        padding: 24px 16px 16px 16px;
+    }
+    .chart-container {
+        height: 220px;
+    }
+}

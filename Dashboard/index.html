@@ -16,7 +16,14 @@
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/gauge.css">
     <link rel="stylesheet" href="css/cards.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/chart.umd.js"></script>
+    <script>
+        if (typeof Chart === 'undefined') {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>');
+        }
+    </script>
+    <script src="data/aqi_daily.js"></script>
+    <script src="data/forecast_48h.js"></script>
 </head>
 
 <body>

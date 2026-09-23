@@ -1,0 +1,6 @@
+Experiment,Feature_Count,Train_RMSE,Val_RMSE,Test_RMSE,Test_MAE,Test_R2,Overfit_Gap_Percent
+A_Raw_Sensor_Only,11,61.76,74.01,81.31,54.08,0.2844,19.84
+B_Raw_Plus_Temporal,17,60.58,75.67,82.73,54.3,0.2592,24.91
+C_Raw_Temporal_Lags,25,60.22,74.92,82.79,54.42,0.2608,24.42
+D_Raw_Temporal_Lags_Rolling,43,60.57,75.35,83.47,54.88,0.2486,24.41
+E_All_Legitimate_Features,63,59.81,75.34,83.34,54.52,0.251,25.96

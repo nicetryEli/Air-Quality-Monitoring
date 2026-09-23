@@ -1,0 +1,8 @@
+Experiment,Model,Feature_Set,Split_Strategy,Train_RMSE,Val_RMSE,Test_RMSE,Test_MAE,Test_R2,Overfit_Gap_%,Training_Time_s,Notes
+EXP-01,Naive_Persistence,PM2.5_only,Chronological_Purged,80.51,91.02,99.97,64.07,-0.0777,13.06,0.0,y_hat(t+h) = y(t)
+EXP-02,Historical_Mean,None,Chronological_Purged,73.25,87.74,96.72,68.47,-0.0088,0.0,0.0,Train mean vector
+EXP-03,Ridge_Linear,All_Engineered,Chronological_Purged,61.94,76.3,81.52,54.76,0.2833,23.17,3.0,alpha=100.0
+EXP-04,CatBoost_MultiRMSE,All_Engineered,Chronological_Purged,59.37,75.63,83.68,54.74,0.2449,27.39,23.7,"depth=6, lr=0.04, l2=10, best_iter=88"
+EXP-05,LightGBM_MultiHorizon,All_Engineered,Chronological_Purged,55.92,75.77,84.05,54.2,0.2382,35.5,218.3,"depth=6, leaves=31, subsample=0.8, reg_l2=10"
+EXP-06,Simple_Average_Ensemble,All_Engineered,Chronological_Purged,57.37,75.47,83.57,54.29,0.2469,31.55,0.0,0.5 * CatBoost + 0.5 * LightGBM
+EXP-07,Weighted_Ensemble,All_Engineered,Chronological_Purged,57.65,75.47,83.54,54.34,0.2473,30.89,0.0,alpha=0.58 (CB) + 0.42 (LGB)

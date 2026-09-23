@@ -1,0 +1,6 @@
+Mô hình,RMSE (µg/m³),NRMSE / Range (%),"NRMSE / Std (σ, %)","NRMSE / Mean (CV, %)",NRMSE / IQR (%),R² Score
+Naive Persistence,99.97,12.0,103.81,114.3,96.12,-0.0777
+Ridge Linear,81.52,9.79,84.66,93.21,78.39,0.2833
+CatBoost (MultiRMSE),83.68,10.05,86.89,95.67,80.46,0.2449
+LightGBM (MultiHorizon),84.05,10.09,87.29,96.1,80.82,0.2381
+Weighted Ensemble,83.55,10.03,86.76,95.52,80.33,0.2473

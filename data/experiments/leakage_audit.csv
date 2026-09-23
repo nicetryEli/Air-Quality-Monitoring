@@ -1,0 +1,64 @@
+Feature,Source,Uses future data?,Uses target?,Safe?,Action
+PM2.5,Sensor observation at current hour t,No,Yes (current state at t),Safe,Base target indicator at t; keep
+PM10,Meteorological / environmental sensor at t,No,No,Safe,Environmental covariate; keep
+SO2,Meteorological / environmental sensor at t,No,No,Safe,Environmental covariate; keep
+NO2,Meteorological / environmental sensor at t,No,No,Safe,Environmental covariate; keep
+CO,Meteorological / environmental sensor at t,No,No,Safe,Environmental covariate; keep
+O3,Meteorological / environmental sensor at t,No,No,Safe,Environmental covariate; keep
+TEMP,Meteorological / environmental sensor at t,No,No,Safe,Environmental covariate; keep
+PRES,Meteorological / environmental sensor at t,No,No,Safe,Environmental covariate; keep
+DEWP,Meteorological / environmental sensor at t,No,No,Safe,Environmental covariate; keep
+RAIN,Meteorological / environmental sensor at t,No,No,Safe,Environmental covariate; keep
+WSPM,Meteorological / environmental sensor at t,No,No,Safe,Environmental covariate; keep
+PM2.5_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+PM10_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+SO2_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+NO2_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+CO_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+O3_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+TEMP_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+PRES_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+DEWP_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+RAIN_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+WSPM_was_missing,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+AQI_partial,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+AQI_imputed_count,Data quality / imputation flag at t,No,No,Safe,Data quality indicator; keep
+AQI,Air Quality Index at time t,No,Collinear with current PM2.5,Safe,Available at prediction time; keep
+hour_sin,Calendar harmonics calculated from timestamp t,No,No,Safe,Deterministic temporal feature; keep
+hour_cos,Calendar harmonics calculated from timestamp t,No,No,Safe,Deterministic temporal feature; keep
+dow_sin,Calendar harmonics calculated from timestamp t,No,No,Safe,Deterministic temporal feature; keep
+dow_cos,Calendar harmonics calculated from timestamp t,No,No,Safe,Deterministic temporal feature; keep
+month_sin,Calendar harmonics calculated from timestamp t,No,No,Safe,Deterministic temporal feature; keep
+month_cos,Calendar harmonics calculated from timestamp t,No,No,Safe,Deterministic temporal feature; keep
+PM25_lag1,Autoregressive history shifted backwards >= 1h,No,Past target values (t-k),Safe,Legitimate autoregressive feature; keep
+PM25_lag3,Autoregressive history shifted backwards >= 1h,No,Past target values (t-k),Safe,Legitimate autoregressive feature; keep
+PM25_lag6,Autoregressive history shifted backwards >= 1h,No,Past target values (t-k),Safe,Legitimate autoregressive feature; keep
+PM25_lag12,Autoregressive history shifted backwards >= 1h,No,Past target values (t-k),Safe,Legitimate autoregressive feature; keep
+PM25_lag24,Autoregressive history shifted backwards >= 1h,No,Past target values (t-k),Safe,Legitimate autoregressive feature; keep
+PM25_lag48,Autoregressive history shifted backwards >= 1h,No,Past target values (t-k),Safe,Legitimate autoregressive feature; keep
+PM25_lag72,Autoregressive history shifted backwards >= 1h,No,Past target values (t-k),Safe,Legitimate autoregressive feature; keep
+PM25_lag168,Autoregressive history shifted backwards >= 1h,No,Past target values (t-k),Safe,Legitimate autoregressive feature; keep
+PM25_rmean3,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rstd3,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rq90_3,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rmean6,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rstd6,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rq90_6,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rmean12,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rstd12,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rq90_12,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rmean24,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rstd24,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rq90_24,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rmean48,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rstd48,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rq90_48,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rmean72,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rstd72,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_rq90_72,Rolling window statistics shifted by 1h (<= t-1),No,Past target values strictly before t,Safe,Verified backward-looking; keep
+PM25_diff1,Measurement differentials at or before t,No,Past and current target values,Safe,Legitimate derivative; keep
+PM25_diff24,Measurement differentials at or before t,No,Past and current target values,Safe,Legitimate derivative; keep
+PM25_lag1_minus_lag24,Autoregressive history shifted backwards >= 1h,No,Past target values (t-k),Safe,Legitimate autoregressive feature; keep
+PM10_PM25_ratio,Measurement differentials at or before t,No,Past and current target values,Safe,Legitimate derivative; keep
+CO_PM25_ratio,Measurement differentials at or before t,No,Past and current target values,Safe,Legitimate derivative; keep
+station_code,Spatial entity identifier,No,No,Safe,Known location feature; keep

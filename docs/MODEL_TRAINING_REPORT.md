@@ -1,4 +1,4 @@
-# 🔬 BÁO CÁO HUẤN LUYỆN MÔ HÌNH MACHINE LEARNING (MODEL TRAINING REPORT)
+# BÁO CÁO HUẤN LUYỆN MÔ HÌNH MACHINE LEARNING (MODEL TRAINING REPORT)
 ## Dự Báo Chất Lượng Không Khí Đa Bước 48 Giờ (Multi-Horizon AQI Forecasting)
 > **Mô hình:** HistGradientBoostingRegressor (Multi-Horizon 48h AQI)  
 > **Phiên bản:** `v3.2.1`  

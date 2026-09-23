@@ -1,6 +1,6 @@
 {
   "version": "v3.2.1",
-  "trained_at": "2026-09-16T08:49:19.829476+00:00",
+  "trained_at": "2026-09-23T01:24:30.170346+00:00",
   "model_type": "GradientBoostingRegressor (Multi-Horizon 48h AQI)",
   "model_metrics": {
     "rows_used": 419616,

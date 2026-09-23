@@ -158,17 +158,17 @@ Backend Spring Boot cung cấp các REST API cho Frontend Dashboard và tự đ�
    mvn spring-boot:run
    ```
 3. **Thông tin dịch vụ sau khi khởi chạy:**
-   - Server URL: `http://localhost:8080`
+   - Server URL: `http://localhost:8088` (hoặc mở trực tiếp Dashboard tại đây)
    - Kiểm tra trạng thái hệ thống (Health Check):
      ```bash
-     curl http://localhost:8080/api/v1/stations
+     curl http://localhost:8088/api/v1/stations
      ```
-   - H2 Database In-Memory Console: `http://localhost:8080/h2-console`
+   - H2 Database In-Memory Console: `http://localhost:8088/h2-console`
      - **JDBC URL:** `jdbc:h2:mem:aqidb`
      - **User Name:** `sa`
      - **Password:** *(để trống)*
 
-*(Mẹo: Khi triển khai Production, chỉ cần đổi cấu hình `spring.profiles.active=prod` trong `application.properties` và cấu hình kết nối PostgreSQL trong `application-prod.properties`)*.
+*(Lưu ý: Mặc định cổng 8088 được dùng do cổng 8080 trên một số máy Windows bị giới hạn bởi quyền socket Hyper-V/NAT. Khi triển khai Production, bạn có thể chỉ định `PORT=...` tùy ý)*.
 
 ---
 

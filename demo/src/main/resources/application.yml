@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
+  web:
+    resources:
+      static-locations: "file:../Dashboard/,file:./Dashboard/,classpath:/static/"
 
 ---
 spring:
@@ -44,4 +47,4 @@ spring:
 
 ---
 server:
-  port: ${PORT:8080}
+  port: ${PORT:8088}

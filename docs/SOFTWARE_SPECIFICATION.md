@@ -1,4 +1,4 @@
-# 📘 ĐẶC TẢ PHẦN MỀM & KIẾN TRÚC HỆ THỐNG (SOFTWARE SPECIFICATION - SRS)
+# ĐẶC TẢ PHẦN MỀM & KIẾN TRÚC HỆ THỐNG (SOFTWARE SPECIFICATION - SRS)
 ## Hệ Thống Quan Trắc, Dự Báo Chất Lượng Không Khí (AQI) & Cảnh Báo Sớm Cho Nhóm Nhạy Cảm
 > **Mã tài liệu:** SRS-AQI-2026-V2.5  
 > **Đơn vị phối hợp:** Sở Tài nguyên & Môi trường Thành phố  
